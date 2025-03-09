@@ -10,9 +10,11 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
+    // I dont know how to implement this search feature to frontend but this working for now
     @Query("SELECT p from Product p WHERE " +
             "LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(p.productDesc) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
-            "LOWER(p.productCategory) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+            "LOWER(p.productCategory) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "LOWER(p.productBrand) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<Product> searchProduct(String keyword);
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
+// Need to handle the HTTP requests and responses better
 @RestController
 @CrossOrigin
 @RequestMapping("/api")
@@ -19,6 +21,7 @@ public class ProductController {
 
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getProducts() {
+
         List<Product> list = service.getProducts();
 
         if (list != null) {
@@ -30,6 +33,7 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProductById(@PathVariable int productId) {
+
         Product product = service.getProductById(productId);
         if (product != null)
             return ResponseEntity.ok(product);
@@ -39,17 +43,26 @@ public class ProductController {
 
     @PostMapping("/products")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
-        Product request = service.addProduct(product);
 
-        if (request != null) {
-            return ResponseEntity.ok().build();
+        if (product.equals(new Product())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
+        Product response = service.addProduct(product);
+
+        if (response != null) {
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } else {
-            return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(null , HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/products")
     public ResponseEntity<Product> updateProduct(@RequestBody Product product) {
+
+        if (product.equals(new Product())) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
 
         Product item = service.updateProduct(product);
 
@@ -63,6 +76,11 @@ public class ProductController {
 
     @DeleteMapping("/products/{productId}")
     public ResponseEntity<Product> deleteProduct(@PathVariable int productId) {
+
+        if (productId == 0) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+
         Product product = service.deleteProduct(productId);
 
         if (product != null) {

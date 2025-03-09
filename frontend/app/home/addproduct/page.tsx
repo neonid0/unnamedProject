@@ -2,6 +2,9 @@
 import { useState } from "react";
 import axios from "axios";
 
+// There is an issue with request content
+// The request content is not being sent to the server
+// seems normal on network layer, altough.
 export default function Addproduct() {
     const [product, setProduct] = useState({
         productName: "",
@@ -21,27 +24,46 @@ export default function Addproduct() {
 
     const submitHandler = (event) => {
         event.preventDefault();
-        const formData = new FormData();
-        formData.append(
-            "product",
-            new Blob([JSON.stringify(product)], { type: "application/json" })
-        );
 
-        axios
-            .post("http://localhost:8000/api/products", formData, {
-                headers: {
-                    "Content-Type": "form-data",
-                },
-            })
-            .then((response) => {
-                console.log("Product added successfully:", response.data);
-                alert("Product added successfully");
-            })
-            .catch((error) => {
-                console.error("Error adding product:", error);
-                alert("Error adding product");
-            });
+        fetch("http://localhost:8000/api/products", {
+            method: "POST",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ product }),
+        })
+            .then((event) => event.json())
+            .then((data) => console.log("Product created:", data))
+            .catch((error) => console.error("Error:", error));
+
+
+        // axios
+        //     .post("http://localhost:8000/api/products", {
+        //         headers: {
+        //             "Accept": "application/json",
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({ product }),
+        //     })
+        //     .then((response) => {
+        //         console.log("Product added successfully:", response.data);
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error adding product:", error);
+        //     });
     };
+
+    const getHandler = e => {
+        axios.get('http://localhost:8000/api/products')
+            .then(response => {
+                console.log(response.data);
+                console.log("Products getted out");
+            })
+            .catch(error => {
+                console.error('Error getting product:', error);
+            })
+    }
 
 
 
@@ -56,39 +78,36 @@ export default function Addproduct() {
                         </label>
                         <input
                             type="text"
-                            className="form-control"
                             placeholder="Product Name"
                             onChange={handleInputChange}
                             value={product.productName}
-                            name="name"
+                            name="productName"
                         />
                     </div>
-                    {/* <div className="col-md-6"> */}
-                    {/*     <label className="form-label"> */}
-                    {/*         <h6>Brand</h6> */}
-                    {/*     </label> */}
-                    {/*     <input */}
-                    {/*         type="text" */}
-                    {/*         name="brand" */}
-                    {/*         className="form-control" */}
-                    {/*         placeholder="Enter your Brand" */}
-                    {/*         value={product.brand} */}
-                    {/*         onChange={handleInputChange} */}
-                    {/*         id="brand" */}
-                    {/*     /> */}
-                    {/* </div> */}
+                    <div className="col-md-6">
+                        <label className="form-label">
+                            <h6>Brand</h6>
+                        </label>
+                        <input
+                            type="text"
+                            name="productBrand"
+                            placeholder="Enter your Brand"
+                            value={product.productBrand}
+                            onChange={handleInputChange}
+                            id="productBrand"
+                        />
+                    </div>
                     <div className="col-12">
                         <label className="form-label">
                             <h6>Description</h6>
                         </label>
                         <input
                             type="text"
-                            className="form-control"
                             placeholder="Add product description"
                             value={product.productDesc}
-                            name="description"
+                            name="productDesc"
                             onChange={handleInputChange}
-                            id="description"
+                            id="productDesc"
                         />
                     </div>
                     <div className="col-5">
@@ -97,12 +116,11 @@ export default function Addproduct() {
                         </label>
                         <input
                             type="number"
-                            className="form-control"
                             placeholder="Eg: $1000"
                             onChange={handleInputChange}
                             value={product.productPrice}
-                            name="price"
-                            id="price"
+                            name="productPrice"
+                            id="productPrice"
                         />
                     </div>
 
@@ -111,11 +129,10 @@ export default function Addproduct() {
                             <h6>Category</h6>
                         </label>
                         <select
-                            className="form-select"
                             value={product.productCategory}
                             onChange={handleInputChange}
-                            name="category"
-                            id="category"
+                            name="productCategory"
+                            id="productCategory"
                         >
                             <option value="">Select category</option>
                             <option value="Laptop">Laptop</option>
@@ -134,13 +151,12 @@ export default function Addproduct() {
                         </label>
                         <input
                             type="number"
-                            className="form-control"
                             placeholder="Stock Remaining"
                             onChange={handleInputChange}
                             value={product.productQuantity}
-                            name="stockQuantity"
+                            name="productQuantity"
                             // value={`${stockAlert}/${stockQuantity}`}
-                            id="stockQuantity"
+                            id="productQuantity"
                         />
                     </div>
                     <div className="col-md-4">
@@ -149,11 +165,10 @@ export default function Addproduct() {
                         </label>
                         <input
                             type="date"
-                            className="form-control"
                             value={product.productReleaseDate}
-                            name="releaseDate"
+                            name="productReleaseDate"
                             onChange={handleInputChange}
-                            id="releaseDate"
+                            id="productReleaseDate"
                         />
                     </div>
                     {/* <input className='image-control' type="file" name='file' onChange={(e) => setProduct({...product, image: e.target.files[0]})} />
@@ -161,7 +176,6 @@ export default function Addproduct() {
                     <div className="col-12">
                         <div className="form-check">
                             <input
-                                className="form-check-input"
                                 type="checkbox"
                                 name="productAvailable"
                                 id="gridCheck"
@@ -183,6 +197,8 @@ export default function Addproduct() {
                         </button>
                     </div>
                 </form>
+
+                <button onClick={getHandler}>Get</button>
             </div>
         </div>
     );

@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// Content name is not suitable for this component
 const NavBar = () => {
     return (
         <StyledWrapper>

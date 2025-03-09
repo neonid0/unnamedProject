@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.util.Date;
 
+// Attributes are a lot than the necessary for now
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

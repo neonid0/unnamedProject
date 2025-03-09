@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+// Maybe this should work
 @Service
 public class ProductService {
 
@@ -26,9 +27,10 @@ public class ProductService {
     public Product addProduct(Product product) {
 
         for (Product repoProduct : repository.findAll()) {
-            if (product.getProductName().equals(repoProduct.getProductName())) {
-                return null;
-            }
+            System.out.println(repoProduct.getProductName());
+//            if (product.getProductName().equals(repoProduct.getProductName())) {
+//                return null;
+//            }
         }
 
         repository.save(product);
