@@ -1,40 +1,70 @@
-import SearchBar from "../components/searchBar";
-import Form from "next/form";
+"use client";
 
-// There is a problem which is cruical to solve 
-// but this project goes to wrong path
-// maybe take care of this problem in the future
+import { useEffect, useState } from "react";
+import API from "@/lib/api"; // Import the API instance
+import Footer from "@/app/components/footer";
+
+interface Product {
+    productId: number;
+    productName: string;
+    productDesc: string;
+    productPrice: number;
+    productBrand: string;
+    productCategory: string;
+    productReleaseDate: string;
+    productQuantity: number;
+    productAvailable: boolean;
+}
+
+type ProductListProps = {
+    products: Product[];
+    product: Product;
+}
+
+
 export default function Home() {
+
+    const [products, setProducts] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        API.get<Product[]>("/products")
+            .then((response) => {
+                setProducts(response.data);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching products:", error);
+                setLoading(false);
+            });
+    }, []);
+
     return (
-        <div className="min-h-screen">
+        <div>
 
-            {/* <SearchBar /> */}
+            <h1>Product List</h1>
 
-            <Form action="/home/addproduct">
-                {/* On submission, the input value will be appended to
-          the URL, e.g. /search?query=abc */}
-                <input name="query" />
-                <button type="submit">Submit</button>
-            </Form>
+            {loading ? <p>Loading...</p> : (
+                <ul className="flex flex-row mx-3 p-5 rounded-2xl max-w-3xl text-[#f2f2f2] bg-[#2f2f2f] ">
+                    {products.map((product) => (
+                        <li className="text-nowrap mr-5" key={product.productId} >
+                            <h2>Name: {product.productName}</h2>
+                            <p>Description: {product.productDesc}</p>
+                            <p>Category: {product.productCategory}</p>
+                            <p>Brand: {product.productBrand}</p>
+                            <p>Price: ${product.productPrice}</p>
+                            <p>Available: {product.productAvailable ? "Yes" : "No"}</p>
+                            <p>Quantity: {product.productQuantity}</p>
+                            <p>Release Date: {product.productReleaseDate}</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
 
-            <div className="flex flex-row  items-stretch mt-4 justify-center">
-
-                <div className="flex flex-col items-start w-64 min-w-56">
-                    Side line for home menu.
-                </div>
-
-                <div className="flex flex-col w-4xl min-w-2xl">
-                    <ul className=" grid grid-rows-2">
-                        <li>An item</li>
-                        <li>An item</li>
-                        <li>An item</li>
-                        <li>An item</li>
-                    </ul>
-                </div>
-
-            </div>
+            <Footer />
 
         </div>
 
-    )
+    );
 }
+
