@@ -24,7 +24,7 @@
 ### Frontend (React)
 - React 18+
 - Next.js
-- Tailwind CSS (inline styling, no matter how much i don't like it :/)
+- Tailwind CSS
 
 ---
 
