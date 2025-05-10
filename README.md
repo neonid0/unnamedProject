@@ -6,7 +6,6 @@
 - ✅ Full-stack setup with REST API communication
 - ✅ CORS support for cross-origin requests
 - ✅ JSON request/response handling
-- ✅ Basic Docker support for containerization
 
 - ✅ Axios integration will be added on Next.js for API calls
 
