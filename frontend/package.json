@@ -11,7 +11,7 @@
   "dependencies": {
     "@tailwindcss/language-server": "^0.14.8",
     "@types/styled-components": "^5.1.34",
-    "axios": "^1.8.2",
+    "axios": "^1.12.0",
     "bootstrap": "^5.3.3",
     "next": "15.4.8",
     "react": "^19.0.0",
